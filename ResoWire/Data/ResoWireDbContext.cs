@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-
-namespace ResoWire.Data
+﻿namespace ResoWire.Data
 {
     public class ResoWireDbContext : IdentityDbContext
     {
@@ -73,17 +69,7 @@ namespace ResoWire.Data
             modelBuilder.Entity<IdentityUserClaim<string>>()
               .HasKey(b => b.UserId);
 
-            modelBuilder.Entity<IdentityUserLogin<string>>()
-                .HasData(
-                new IdentityUserLogin<string>
-                {
-
-                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                    ProviderDisplayName = "MasterOfDeeesaster"
-
-
-                }
-            );
+            
             modelBuilder.Entity<IdentityUserLogin<string>>()
                 .HasKey(b =>b.UserId);
 

@@ -1,5 +1,3 @@
-using System;
-
 namespace ResoWire.Data
 {
     public class WeatherForecast

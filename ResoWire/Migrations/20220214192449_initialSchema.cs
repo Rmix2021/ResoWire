@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ResoWire.Migrations
 {
-    public partial class initialschema : Migration
+    public partial class initialSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -125,17 +125,12 @@ namespace ResoWire.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "2c5e174e-3b0e-446f-86af-483d56fd7210", "9142e669-a6f6-4c3b-9f13-7ddf916ae425", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { "2c5e174e-3b0e-446f-86af-483d56fd7210", "a9d87d17-4f2f-4ca2-ab87-984cf56a62a9", "Administrator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "UserClaims",
                 columns: new[] { "UserId", "ClaimType", "ClaimValue", "Id" },
                 values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", "AdminOnly", "AdminOnly", 1 });
-
-            migrationBuilder.InsertData(
-                table: "UserLogins",
-                columns: new[] { "UserId", "LoginProvider", "ProviderDisplayName", "ProviderKey" },
-                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", null, "MasterOfDeeesaster", null });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",
@@ -145,7 +140,7 @@ namespace ResoWire.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", 0, "5db9b6fa-ff42-4d66-9015-6341d87a221b", "eurotuner1981@gmail.com", true, false, null, "EUROTUNER1981@GMAIL.COM", "EUROTUNER1981@GMAIL.COM", "AQAAAAEAACcQAAAAEAfxfJ8HIaHn8kObUFKhha1PUVKaYv+71Aw/5svAOGfD8xJ2swXDBRlFz5JJEOUlxQ==", null, false, "631e810c-f161-4593-8d08-00c0c09f1a29", false, "eurotuner1981@gmail.com" });
+                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", 0, "7d7b62f7-4cf5-45d3-b5e4-7a644b56daef", "eurotuner1981@gmail.com", true, false, null, "EUROTUNER1981@GMAIL.COM", "EUROTUNER1981@GMAIL.COM", "AQAAAAEAACcQAAAAEB/6OocHpQdNBSueOShh61mckj5kEKtvehphpXUiV+kgUD10TjYuRoeS3TQXpE0ACA==", null, false, "28b89682-e537-4fb4-bbcb-ba75546a38f7", false, "Admin1" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

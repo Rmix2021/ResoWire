@@ -6,6 +6,12 @@
             : base(options)
         {
         }
+
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Issue> Issues { get; set; }
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IdentityRole>().HasData

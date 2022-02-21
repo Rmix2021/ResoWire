@@ -7,14 +7,18 @@
 
         [Required]
         public string Projectname { get; set; }
+
+        [Required]
         public string Description { get; set; }
 
         [Required]
-        public DateOnly StartDate { get; set;}
-        public DateOnly TargetEndDate { get;set;}
-        public DateOnly ActualEndDate { get; set; }
+        public DateTime StartDate { get; set; }
 
-        public ICollection<Comment> Comments { get; init; } = new List<Comment>();
+        [Required]
+        public DateTime TargetEndDate { get; set; }
+        public DateTime ActualEndDate { get; set; }
+
+
 
     }
 }

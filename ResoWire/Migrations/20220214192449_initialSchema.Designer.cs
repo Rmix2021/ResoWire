@@ -12,8 +12,8 @@ using ResoWire.Data;
 namespace ResoWire.Migrations
 {
     [DbContext(typeof(ResoWireDbContext))]
-    [Migration("20220212202946_Addedtables")]
-    partial class Addedtables
+    [Migration("20220214192449_initialSchema")]
+    partial class initialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,7 +46,7 @@ namespace ResoWire.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "5dd99aef-df4e-460d-a1d4-80284a88da5e",
+                            ConcurrencyStamp = "a9d87d17-4f2f-4ca2-ab87-984cf56a62a9",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -139,15 +139,15 @@ namespace ResoWire.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9a07e066-5af4-45ae-87aa-a8f321bfe4b9",
+                            ConcurrencyStamp = "7d7b62f7-4cf5-45d3-b5e4-7a644b56daef",
                             Email = "eurotuner1981@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EUROTUNER1981@GMAIL.COM",
                             NormalizedUserName = "EUROTUNER1981@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJrSOijosKxKmiat7CxYF7xeLULDkGtfaKzAvDm9/AEacH0HdPQwv5HieFTZxtERLA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB/6OocHpQdNBSueOShh61mckj5kEKtvehphpXUiV+kgUD10TjYuRoeS3TQXpE0ACA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "54cc94b2-7e5e-404f-ad9d-0d1017c0c237",
+                            SecurityStamp = "28b89682-e537-4fb4-bbcb-ba75546a38f7",
                             TwoFactorEnabled = false,
                             UserName = "Admin1"
                         });

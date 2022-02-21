@@ -1,0 +1,43 @@
+﻿@page "/EditProject/{Id}"
+@using ResoWire.Data
+@inject ProjectService projectService
+@inject NavigationManager NavigationManager
+
+<h3>EditProject</h3>
+<h3>@projectObject.Projectname</h3>
+<div>   
+    <form method="post" asp-page-handler="Submit">
+        <label>Project Name:</label>
+        <input type="text" @bind="projectObject.Projectname"><br />
+        <label>Project description:</label>
+        <input type="text" @bind="projectObject.Description"><br />
+        <label>Project Start Date:</label>
+        <input type="datetime-local" @bind="projectObject.StartDate"><br />
+         <label>Project Target End Date:</label>
+        <input type="datetime-local" @bind="projectObject.TargetEndDate"><br />
+        <input type="hidden" @bind="projectObject.ProjectId">       
+        <input type="button" class="btn btn-primary" @onclick="@UpdateProject" value="Save"/>
+    </form>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    Project projectObject = new Project();
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectObject = await Task.Run(() => projectService.GetProjectAsync(Convert.ToInt32(Id)));
+    }
+    protected async void UpdateProject()
+    {
+        await projectService.UpdateProjectAsync(projectObject);
+        NavigationManager.NavigateTo("./Projects");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./Projects");
+    }
+
+}

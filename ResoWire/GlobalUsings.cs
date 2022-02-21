@@ -12,8 +12,21 @@ global using System.ComponentModel.DataAnnotations;
 global using System.ComponentModel.DataAnnotations.Schema;
 global using Microsoft.AspNetCore.Mvc.TagHelpers;
 global using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.AspNetCore.Authorization;
+global using ResoWire.Authorization;
+global using System.Configuration;
+global using ResoWire.Services;
+global using Microsoft.Extensions.Configuration;
+global using System;
+global using System.Collections.Generic;
+global using System.Data;
+global using System.Data.SqlClient;
+global using System.Threading.Tasks;
+
+
+
 
 namespace ResoWire
 {

@@ -5,7 +5,7 @@ namespace ResoWire.Data
     public class Person : AuditTable
     {
         [Key]
-        public IdentityUser UserId { get; set; }
+        public int UserId { get; set; }
        
         [Required]
         public IdentityUser UserName { get; set; }

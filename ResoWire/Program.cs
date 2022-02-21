@@ -1,3 +1,5 @@
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,9 +9,21 @@ builder.Services.AddDbContext<ResoWireDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ResoWireDbContext>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policybuilder
+    => policybuilder.RequireClaim(Claims.AdminOnly));
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IsUser", policybuilder
+    => policybuilder.RequireClaim(Claims.IsUser));
+});
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services.AddScoped<ProjectService>();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();

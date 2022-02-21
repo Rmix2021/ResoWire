@@ -12,8 +12,8 @@ using ResoWire.Data;
 namespace ResoWire.Migrations
 {
     [DbContext(typeof(ResoWireDbContext))]
-    [Migration("20220209180056_initialschema")]
-    partial class initialschema
+    [Migration("20220214192747_addedIssueTable")]
+    partial class addedIssueTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,7 +46,7 @@ namespace ResoWire.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "9142e669-a6f6-4c3b-9f13-7ddf916ae425",
+                            ConcurrencyStamp = "6f195f24-cec7-4908-a80f-55bd1ccbd862",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -139,17 +139,17 @@ namespace ResoWire.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5db9b6fa-ff42-4d66-9015-6341d87a221b",
+                            ConcurrencyStamp = "4770db00-cff6-4ee0-95fc-06f6078e2842",
                             Email = "eurotuner1981@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EUROTUNER1981@GMAIL.COM",
                             NormalizedUserName = "EUROTUNER1981@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAfxfJ8HIaHn8kObUFKhha1PUVKaYv+71Aw/5svAOGfD8xJ2swXDBRlFz5JJEOUlxQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGYgTAb+GwDZHu6IPKdXZlLIDvg8CYl/VO16udcvlY0WXoF3/jFSDDyKJmsX0B2VVw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "631e810c-f161-4593-8d08-00c0c09f1a29",
+                            SecurityStamp = "207ad145-d3fe-4b9e-b944-96858304113c",
                             TwoFactorEnabled = false,
-                            UserName = "eurotuner1981@gmail.com"
+                            UserName = "Admin1"
                         });
                 });
 
@@ -198,13 +198,6 @@ namespace ResoWire.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("UserLogins");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            ProviderDisplayName = "MasterOfDeeesaster"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>

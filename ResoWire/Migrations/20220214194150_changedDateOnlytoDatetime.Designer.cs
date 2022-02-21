@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ResoWire.Data;
 
@@ -11,9 +12,10 @@ using ResoWire.Data;
 namespace ResoWire.Migrations
 {
     [DbContext(typeof(ResoWireDbContext))]
-    partial class ResoWireDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220214194150_changedDateOnlytoDatetime")]
+    partial class changedDateOnlytoDatetime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +46,7 @@ namespace ResoWire.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "533deaac-73e2-45cd-8bae-300f48353938",
+                            ConcurrencyStamp = "d83c58ed-4a7b-4994-82f4-c245f1ea880f",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -137,15 +139,15 @@ namespace ResoWire.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "76208acd-4099-4fa7-8ba5-e5124671bb27",
+                            ConcurrencyStamp = "0c80c037-04d4-4890-8aa0-dab9f6729ef1",
                             Email = "eurotuner1981@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EUROTUNER1981@GMAIL.COM",
                             NormalizedUserName = "EUROTUNER1981@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFLMfAWh6JBMGgmjH5wuSjRLD7ik/rm6VkaNX2I8op/nTlgf8Nw0Aarxn/3tLn5IbQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIdEuMSNjijOWvCSY04lA7Z1YSOfy1g8AZSXuUCRbQDmYNVIMeBe5+opGRP2QpuBMw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1ccd0f44-937e-47fd-8ba3-e53d38853c79",
+                            SecurityStamp = "2cfc69e8-b5cf-4477-9e27-b8e609e5558a",
                             TwoFactorEnabled = false,
                             UserName = "Admin1"
                         });

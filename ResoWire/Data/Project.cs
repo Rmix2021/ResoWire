@@ -17,6 +17,8 @@
         [Required]
         public DateTime TargetEndDate { get; set; }
         public DateTime ActualEndDate { get; set; }
+        
+        public string AssignedTo { get; set; }
 
 
 

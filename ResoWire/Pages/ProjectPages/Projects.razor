@@ -4,7 +4,7 @@
 
 
 <h3>Projects</h3>
-<AuthorizeView>
+<AuthorizeView Roles="Administrators">
     <NavLink class="nav-link" href="AddNewProject">
     <button class="btn btn-primary">Add A New Project</button>
     </NavLink>
@@ -16,9 +16,11 @@
             <tr>
                 <th>Projects</th>
                 <th>Start Date</th>
+                 <AuthorizeView Roles="Administrators">
                 <th>Created By</th>
                 <th>Created By Id</th>
                 <th>Created On</th>
+                 </AuthorizeView>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +34,7 @@
                            <a class="nav-link" href="Issues/@project.ProjectId"><span aria-hidden="true">@project.Projectname</span></a>
                        </td> 
                         <td class="align-middle">@project.StartDate</td> 
+                         <AuthorizeView Roles="Administrators">
                         <td class="align-middle">@project.CreatedBy</td>
                         <td class="align-middle">@project.CreatedById</td>
                         <td class="align-middle">@project.CreatedOn</td>
@@ -41,6 +44,7 @@
                         <td>
                             <a class="nav-link" href="DeleteProject/@project.ProjectId"><span class="oi oi-pencil" aria-hidden="true">Delete</span></a>
                         </td>
+                        </AuthorizeView>
                     </tr>
                 }
             }

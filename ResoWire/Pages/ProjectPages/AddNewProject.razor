@@ -15,10 +15,7 @@
         <label>Project Start Date:</label>
         <input type="datetime-local" @bind="projectObject.StartDate"><br />
          <label>Project Target End Date:</label>
-        <input type="datetime-local" @bind="projectObject.TargetEndDate"><br />       
-        <input type="hidden" @bind="projectObject.CreatedBy">
-        <input type="hidden" @bind="projectObject.CreatedById">
-        <input type="hidden" @bind="projectObject.CreatedOn">
+        <input type="datetime-local" @bind="projectObject.TargetEndDate"><br />
         <input type="button" class="btn btn-primary" @onclick="@CreateNewProject" value="Save"/>
         <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel"/>    
     </form>
@@ -27,20 +24,13 @@
 @code {
     Project projectObject = new Project();
 
-
-    protected async override Task OnInitializedAsync()
+    protected async void CreateNewProject()
     {
         var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
         var user = authstate.User;
         projectObject.CreatedBy = authstate.User.Identity.Name;
         projectObject.CreatedOn = System.DateTime.Now;
         projectObject.CreatedById = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
-
-
-    }
-
-    protected async void CreateNewProject()
-    {
         await projectService.AddNewProjectAsync(projectObject);
         NavigationManager.NavigateTo("./Projects");
     }

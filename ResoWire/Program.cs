@@ -8,6 +8,7 @@ builder.Services.AddDbContext<ResoWireDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ResoWireDbContext>();
 builder.Services.AddAuthorization(options =>
 {

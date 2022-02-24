@@ -12,8 +12,8 @@ using ResoWire.Data;
 namespace ResoWire.Migrations
 {
     [DbContext(typeof(ResoWireDbContext))]
-    [Migration("20220214194150_changedDateOnlytoDatetime")]
-    partial class changedDateOnlytoDatetime
+    [Migration("20220224085356_initialSchema")]
+    partial class initialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,26 +30,25 @@ namespace ResoWire.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "d83c58ed-4a7b-4994-82f4-c245f1ea880f",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -67,20 +66,14 @@ namespace ResoWire.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoleClaims");
+                    b.HasIndex("RoleId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "AdminOnly",
-                            ClaimValue = "AdminOnly",
-                            RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210"
-                        });
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
@@ -92,10 +85,12 @@ namespace ResoWire.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -107,10 +102,12 @@ namespace ResoWire.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -128,35 +125,29 @@ namespace ResoWire.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "0c80c037-04d4-4890-8aa0-dab9f6729ef1",
-                            Email = "eurotuner1981@gmail.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "EUROTUNER1981@GMAIL.COM",
-                            NormalizedUserName = "EUROTUNER1981@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIdEuMSNjijOWvCSY04lA7Z1YSOfy1g8AZSXuUCRbQDmYNVIMeBe5+opGRP2QpuBMw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "2cfc69e8-b5cf-4477-9e27-b8e609e5558a",
-                            TwoFactorEnabled = false,
-                            UserName = "Admin1"
-                        });
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -164,40 +155,39 @@ namespace ResoWire.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
-                    b.ToTable("UserClaims");
+                    b.HasIndex("UserId");
 
-                    b.HasData(
-                        new
-                        {
-                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            ClaimType = "AdminOnly",
-                            ClaimValue = "AdminOnly",
-                            Id = 1
-                        });
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.ToTable("UserLogins");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -206,18 +196,13 @@ namespace ResoWire.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("UserId", "RoleId");
 
-                    b.ToTable("UserRoles");
+                    b.HasIndex("RoleId");
 
-                    b.HasData(
-                        new
-                        {
-                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210"
-                        });
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -226,17 +211,19 @@ namespace ResoWire.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("UserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("ResoWire.Data.Comment", b =>
@@ -251,8 +238,11 @@ namespace ResoWire.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -277,8 +267,6 @@ namespace ResoWire.Migrations
 
                     b.HasKey("CommentId");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("ModifiedById");
@@ -294,8 +282,11 @@ namespace ResoWire.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IssueId"), 1L, 1);
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -331,8 +322,6 @@ namespace ResoWire.Migrations
 
                     b.HasKey("IssueId");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("IssueIdentifiedById");
@@ -350,8 +339,11 @@ namespace ResoWire.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -371,8 +363,8 @@ namespace ResoWire.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserClaimUserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("UserClaimId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserNameId")
                         .IsRequired()
@@ -380,15 +372,13 @@ namespace ResoWire.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("EmailId");
 
                     b.HasIndex("ModifiedById");
 
-                    b.HasIndex("UserClaimUserId");
+                    b.HasIndex("UserClaimId");
 
                     b.HasIndex("UserNameId");
 
@@ -406,8 +396,11 @@ namespace ResoWire.Migrations
                     b.Property<DateTime>("ActualEndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -440,8 +433,6 @@ namespace ResoWire.Migrations
 
                     b.HasKey("ProjectId");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("ModifiedById");
@@ -449,12 +440,59 @@ namespace ResoWire.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ResoWire.Data.Comment", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
                         .WithMany()
                         .HasForeignKey("DeletedById");
@@ -463,8 +501,6 @@ namespace ResoWire.Migrations
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
-                    b.Navigation("CreatedBy");
-
                     b.Navigation("DeletedBy");
 
                     b.Navigation("ModifiedBy");
@@ -472,10 +508,6 @@ namespace ResoWire.Migrations
 
             modelBuilder.Entity("ResoWire.Data.Issue", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
                         .WithMany()
                         .HasForeignKey("DeletedById");
@@ -488,8 +520,6 @@ namespace ResoWire.Migrations
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
-                    b.Navigation("CreatedBy");
-
                     b.Navigation("DeletedBy");
 
                     b.Navigation("IssueIdentifiedBy");
@@ -499,10 +529,6 @@ namespace ResoWire.Migrations
 
             modelBuilder.Entity("ResoWire.Data.Person", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
                         .WithMany()
                         .HasForeignKey("DeletedById");
@@ -517,15 +543,13 @@ namespace ResoWire.Migrations
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", "UserClaim")
                         .WithMany()
-                        .HasForeignKey("UserClaimUserId");
+                        .HasForeignKey("UserClaimId");
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "UserName")
                         .WithMany()
                         .HasForeignKey("UserNameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CreatedBy");
 
                     b.Navigation("DeletedBy");
 
@@ -540,10 +564,6 @@ namespace ResoWire.Migrations
 
             modelBuilder.Entity("ResoWire.Data.Project", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
                         .WithMany()
                         .HasForeignKey("DeletedById");
@@ -551,8 +571,6 @@ namespace ResoWire.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-
-                    b.Navigation("CreatedBy");
 
                     b.Navigation("DeletedBy");
 

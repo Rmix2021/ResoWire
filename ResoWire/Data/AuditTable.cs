@@ -7,7 +7,7 @@
         public DateTime? DeletedOn { get; set; }
 
         
-        public IdentityUser CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
         public string CreatedById { get; set; }
 
         public string ModifiedById { get; set; }

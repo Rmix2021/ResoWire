@@ -4,28 +4,42 @@
 
 
 <h3>Projects</h3>
-<NavLink class="nav-link" href="AddNewProject">
-<button class="btn btn-primary">Add A New Project</button>
-</NavLink>
+<AuthorizeView>
+    <NavLink class="nav-link" href="AddNewProject">
+    <button class="btn btn-primary">Add A New Project</button>
+    </NavLink>
+</AuthorizeView>
 
 <div class="table-responsive">
     <table class="table table-striped project">
         <thead>
             <tr>
                 <th>Projects</th>
+                <th>Start Date</th>
+                <th>Created By</th>
+                <th>Created By Id</th>
+                <th>Created On</th>
             </tr>
         </thead>
         <tbody>
             @if (projects != null)
             {
+              
                 @foreach (var project in projects)
                 {
                     <tr>
-                        <td class="align-middle">@project.Projectname</td>          
+                        <td>
+                           <a class="nav-link" href="Issues/@project.ProjectId"><span aria-hidden="true">@project.Projectname</span></a>
+                       </td> 
                         <td class="align-middle">@project.StartDate</td> 
                         <td class="align-middle">@project.CreatedBy</td>
+                        <td class="align-middle">@project.CreatedById</td>
+                        <td class="align-middle">@project.CreatedOn</td>
                         <td>
                             <a class="nav-link" href="EditProject/@project.ProjectId"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a>
+                        </td>
+                        <td>
+                            <a class="nav-link" href="DeleteProject/@project.ProjectId"><span class="oi oi-pencil" aria-hidden="true">Delete</span></a>
                         </td>
                     </tr>
                 }

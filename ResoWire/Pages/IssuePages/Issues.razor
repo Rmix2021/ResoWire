@@ -1,0 +1,11 @@
+﻿@page "/Issues/{ProjectId}"
+@using ResoWire.Data
+@inject ProjectService projectService
+
+<h3>Issues</h3>
+
+@code {
+    [Parameter]
+    public string ProjectId { get; set; }
+
+}

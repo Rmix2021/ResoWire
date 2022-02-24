@@ -1,0 +1,42 @@
+﻿@page "/DeleteProject/{Id}"
+@using ResoWire.Data
+@inject ProjectService projectService
+@inject NavigationManager NavigationManager
+
+<h3>Delete </h3>
+<h3>@projectObject.Projectname</h3>
+<h3>Are you sure want to delete this?</h3>
+
+  <form method="post" asp-page-handler="Submit">
+        <label>Project Name:</label>
+        <input type="text" @bind="projectObject.Projectname"><br />
+        <label>Project description:</label>
+        <input type="text" @bind="projectObject.Description"><br />
+        <label>Project Start Date:</label>
+        <input type="datetime-local" @bind="projectObject.StartDate"><br />
+         <label>Project Target End Date:</label>
+        <input type="datetime-local" @bind="projectObject.TargetEndDate"><br />
+        <input type="button" class="btn btn-danger" @onclick="@RemoveProject" value="Delete" />
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />     
+</form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    Project projectObject = new Project();
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectObject = await Task.Run(() => projectService.GetProjectAsync(Convert.ToInt32(Id)));
+    }
+    protected async void RemoveProject()
+    {
+        await projectService.DeleteProjectAsync(projectObject);
+        NavigationManager.NavigateTo("./Projects");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./Projects");
+    }
+}

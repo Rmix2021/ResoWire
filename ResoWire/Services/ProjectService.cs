@@ -54,7 +54,7 @@ namespace ResoWire.Services
         public List<Project> GetFilteredProjectsByCreatorUserName(string creatorUserName)
         {
 
-            return this._context.Projects.Where(x => x.CreatedBy.UserName == creatorUserName).ToList();
+            return this._context.Projects.Where(x => x.CreatedBy == creatorUserName).ToList();
         }
 
         public List<Project> GetFilteredProjectsByCreatorId(string CreatorId)

@@ -1,9 +1,44 @@
-﻿@page "/DeleteIssue"
+﻿@page "/DeleteIssue/{IssueId}"
 @using ResoWire.Data
+@inject IssueService issueService
 @inject ProjectService projectService
+@inject NavigationManager NavigationManager
 
-<h3>DeleteIssue</h3>
+<h3>Delete </h3>
+<h3>@issueObject.IssueName</h3>
+<h3>Are you sure want to delete this?</h3>
+
+<form method="post" asp-page-handler="Submit">
+    <label>Issue Name:</label>
+    <input type="text" @bind="issueObject.IssueSummary"><br />
+    <label>Issue description:</label>
+    <input type="text" @bind="issueObject.Description"><br />
+    <label>Created By:</label>
+    <input type="text" @bind="issueObject.CreatedBy"><br />
+
+    <input type="button" class="btn btn-danger" @onclick="@RemoveIssue" value="Delete" />
+    <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />     
+</form>
 
 @code {
+    [Parameter]
+    public string IssueId { get; set; }
 
+    Issue issueObject = new Issue();
+
+    protected override async Task OnInitializedAsync()
+    {
+        issueObject = await Task.Run(() => issueService.GetIssueAsync(Convert.ToInt32(IssueId)));
+    }
+
+    protected async void RemoveIssue()
+    {
+        await issueService.DeleteIssueAsync(issueObject);
+        NavigationManager.NavigateTo("./Issues/" + issueObject.IssueId);
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./Issues/" + issueObject.IssueId);
+    }
 }

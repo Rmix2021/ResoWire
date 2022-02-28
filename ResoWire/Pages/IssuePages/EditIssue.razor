@@ -1,9 +1,87 @@
-﻿@page "/EditIssue"
-@using ResoWire.Data
+﻿@page "/EditIssue/{IssueId}"
+@inject IssueService issueService
 @inject ProjectService projectService
-
+@inject NavigationManager NavigationManager
+@inject UserManager<IdentityUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<AuthorizeView Roles="Administrators">>
+<h1>@projectObject.Projectname</h1>
 <h3>EditIssue</h3>
 
-@code {
+<div>   
+    <form method="post" asp-page-handler="Submit">
+        <label>Issue Summary:</label>
+        <input type="text" @bind="issueObject.IssueSummary"><br />
+        <label>Issue description:</label>
+        <input type="text" @bind="issueObject.Description"><br />
+        <label>AssignedTo:</label>
+        <select class="form-control"@bind="@issueObject.AssignedTo">
+            @foreach (var option in AvailableUsers)
+            {
+                <option value="@option">
+                    @option
+                </option>
+            }
+        </select>
 
+        <input type="hidden" @bind="issueObject.IssueId">       
+        <input type="button" class="btn btn-primary" @onclick="@UpdateIssue" value="Save"/>
+    </form>
+</div>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public string IssueId { get; set; }
+
+    public Issue issueObject = new Issue();
+
+    public Project projectObject = new Project();
+
+
+    List<IdentityUser> AvailableUsers = new List<IdentityUser>();
+
+    string strError = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        issueObject = await Task.Run(() => issueService.GetIssueAsync(Convert.ToInt32(IssueId)));
+        projectObject = await Task.Run(() => projectService.GetProjectAsync(Convert.ToInt32(IssueId)));
+    }
+    protected async void UpdateIssue()
+    {
+        var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authstate.User;
+        issueObject.IssueName = projectObject.Projectname +""+ issueObject.IssueId;
+        issueObject.ModifiedBy = authstate.User.Identity.Name;
+        issueObject.ModifiedOn = System.DateTime.Now;
+        issueObject.ModifiedById = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
+        await issueService.UpdateIssueAsync(issueObject);
+        NavigationManager.NavigateTo("./Issues/"+issueObject.IssueId);
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./Issues/"+issueObject.IssueId);
+    }
+
+     public void GetUsers()
+    {
+        // clear any error messages
+        strError = "";
+        // Collection to hold users
+        AvailableUsers = new List<IdentityUser>();
+        // get users from _UserManager
+        var user = _UserManager.Users.Select(x => new IdentityUser
+        {
+            Id = x.Id,
+            UserName = x.UserName,
+            Email = x.Email,
+            PasswordHash = "*****"
+        });
+        foreach (var item in user)
+        {
+            AvailableUsers.Add(item);
+        }
+    }
 }

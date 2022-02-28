@@ -1,11 +1,126 @@
 ﻿@page "/Issues/{ProjectId}"
-@using ResoWire.Data
+
+@inject IssueService issueService
 @inject ProjectService projectService
 
-<h3>Issues</h3>
+<h3>@projectObject.Projectname </h3>
+<h1>Issues</h1>
+
+<a class="btn btn-primary " href="AddIssue/@projectObject.ProjectId">Add an Issue</a>
+
+<button @onclick="@showCreatedColumns">Show Creation Columns</button>
+<button @onclick="@showModifiedColumns">Show Modified Columns</button>
+
+<div class="table-responsive">
+    <table class="table table-striped project">
+        <thead>
+            <tr>
+                <th>IssueId</th>
+                <th>Issue Name</th>
+                <th>Summary</th>
+                <th>Description</th>
+                <AuthorizeView Roles="Administrators">
+                <th hidden="@columnToggle">Created By</th>
+                <th hidden="@columnToggle">Created By Id</th>
+                <th hidden="@columnToggle">Created On</th> 
+                <th hidden="@modifiedColumnToggle">ModifiedBy</th> 
+                <th hidden="@modifiedColumnToggle">ModifiedById</th> 
+                <th hidden="@modifiedColumnToggle">ModifiedOn</th> 
+
+                </AuthorizeView>
+            </tr>
+        </thead>
+        <tbody>
+            @if (issues != null)
+            {
+              
+                @foreach (var issue in issues)
+                {
+                    <tr>
+                        <td>
+                           <a class="nav-link" href="Issues/@issue.IssueId"><span aria-hidden="true">@issue.IssueId</span></a>
+                       </td> 
+                        <td class="align-middle">@if (issue.IssueName == null)
+                            {
+                                @(projectObject.Projectname + issue.IssueId);
+                                
+                            }
+                            else
+                            {
+                                @issue.IssueName;
+                            }
+                        </td> 
+                        <td class="align-middle">@issue.IssueSummary</td> 
+                        <td class="align-middle">@issue.Description</td>
+                        <AuthorizeView Roles="Administrators">
+                        <td class="align-middle" hidden="@columnToggle">@issue.CreatedBy</td>
+                        <td class="align-middle" hidden="@columnToggle">@issue.CreatedById</td>
+                        <td class="align-middle" hidden="@columnToggle">@issue.CreatedOn</td>
+                        <td class="align-middle" hidden="@modifiedColumnToggle">@issue.ModifiedBy</td>
+                        <td class="align-middle" hidden="@modifiedColumnToggle">@issue.ModifiedById</td>
+                        <td class="align-middle" hidden="@modifiedColumnToggle">@issue.ModifiedOn</td>
+                        <td>
+                            <a class="nav-link" href="EditIssue/@issue.IssueId"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a>
+                        </td>
+                        <td>
+                            <a class="nav-link" href="DeleteIssue/@issue.IssueId"><span class="oi oi-pencil" aria-hidden="true">Delete</span></a>
+                        </td>
+                        </AuthorizeView>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>No Issues yet!</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
 
 @code {
     [Parameter]
     public string ProjectId { get; set; }
+
+    private List<Issue> issues;
+
+    public bool columnToggle { get; set; } = true;
+
+    public bool modifiedColumnToggle { get; set; } = true;
+
+    Project projectObject = new Project();
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectObject = await Task.Run(() => projectService.GetProjectAsync(Convert.ToInt32(ProjectId)));
+        issues = await Task.Run(() => issueService.GetFilteredIssuesAsync(Convert.ToInt32(ProjectId)));
+    } 
+
+    private void showCreatedColumns()
+    {
+       if (columnToggle == true)
+            {
+                columnToggle = false;
+            }
+            else
+            {
+                columnToggle = true;
+            }
+    }
+
+        private void showModifiedColumns()
+    {
+       if (modifiedColumnToggle == true)
+            {
+                modifiedColumnToggle = false;
+            }
+            else
+            {
+                modifiedColumnToggle = true;
+            }
+    }
 
 }

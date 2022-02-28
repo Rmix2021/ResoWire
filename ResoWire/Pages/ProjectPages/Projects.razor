@@ -10,16 +10,19 @@
     </NavLink>
 </AuthorizeView>
 
+<button @onclick="@showCreatedColumns">Show Creation Columns</button>
+
 <div class="table-responsive">
     <table class="table table-striped project">
         <thead>
             <tr>
                 <th>Projects</th>
                 <th>Start Date</th>
+                <th>Assigned To</th>
                  <AuthorizeView Roles="Administrators">
-                <th>Created By</th>
-                <th>Created By Id</th>
-                <th>Created On</th>
+                <th hidden="@columnToggle">Created By</th>
+                <th hidden="@columnToggle">Created By Id</th>
+                <th hidden="@columnToggle">Created On</th>
                  </AuthorizeView>
             </tr>
         </thead>
@@ -34,10 +37,11 @@
                            <a class="nav-link" href="Issues/@project.ProjectId"><span aria-hidden="true">@project.Projectname</span></a>
                        </td> 
                         <td class="align-middle">@project.StartDate</td> 
+                        <td class="align-middle">@project.AssignedTo</td>
                          <AuthorizeView Roles="Administrators">
-                        <td class="align-middle">@project.CreatedBy</td>
-                        <td class="align-middle">@project.CreatedById</td>
-                        <td class="align-middle">@project.CreatedOn</td>
+                        <td class="align-middle" hidden="@columnToggle">@project.CreatedBy</td>
+                        <td class="align-middle" hidden="@columnToggle">@project.CreatedById</td>
+                        <td class="align-middle" hidden="@columnToggle">@project.CreatedOn</td>
                         <td>
                             <a class="nav-link" href="EditProject/@project.ProjectId"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a>
                         </td>
@@ -60,13 +64,29 @@
 
 
 @code {
-   
+    public bool columnToggle { get; set; } = true;
+
+ 
+
     private List<Project> projects;
 
     protected override async Task OnInitializedAsync()
     {
         projects = await projectService.GetAllProjectsAsync();
-    }   
+    }  
+    
+    private void showCreatedColumns()
+        {
+            if (columnToggle == true)
+            {
+                columnToggle = false;
+            }
+            else
+            {
+                columnToggle = true;
+            }
+        }
+
 
 }
    

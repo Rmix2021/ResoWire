@@ -22,11 +22,13 @@
             _context.Issues.Update(issue);
             await _context.SaveChangesAsync();
             return true;
+
         }
 
-        public async Task<List<Issue>> GetAllIssuesAsync()
+        public async Task<List<Issue>> GetFilteredIssuesAsync(int Id)
         {
-            var issueList = await _context.Issues.ToListAsync();
+            var issueList = await _context.Issues.Where(x => x.RelatedToProjectId == Id).ToListAsync();
+
             return issueList;
         }
 
@@ -42,12 +44,7 @@
             Issue issue = await _context.Issues.FirstOrDefaultAsync(c => c.IssueId.Equals(Id));
             return issue;
         }
-
-        
-        public async Task<List<Issue>> GetFilteredIssuesByIssueIdentifiedAsync(IdentityUser issueIdentifiedBy)
-        {
-            return await this._context.Issues.Where(x => x.IssueIdentifiedBy == issueIdentifiedBy).ToListAsync();
-        }
+           
 
         public async Task<List<Issue>> GetFilteredIssuesByCreatedByAsync(string createdBy)
         {
@@ -59,7 +56,7 @@
             return await this._context.Issues.Where(x => x.CreatedOn == createdOn).ToListAsync();
         }
 
-        public async Task<List<Issue>> GetFilteredIssuesByDeletedByAsync(IdentityUser deletedBy)
+        public async Task<List<Issue>> GetFilteredIssuesByDeletedByAsync(string deletedBy)
         {
 
             return await this._context.Issues.Where(x => x.DeletedBy == deletedBy).ToListAsync();

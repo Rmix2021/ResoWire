@@ -2,6 +2,9 @@
 @using ResoWire.Data
 @inject ProjectService projectService
 @inject NavigationManager NavigationManager
+@inject UserManager<IdentityUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3>EditProject</h3>
 <h3>@projectObject.Projectname</h3>
@@ -15,8 +18,20 @@
         <input type="datetime-local" @bind="projectObject.StartDate"><br />
          <label>Project Target End Date:</label>
         <input type="datetime-local" @bind="projectObject.TargetEndDate"><br />
+        <label>AssignedTo:</label>
+        <select class="form-control"@bind="@projectObject.AssignedTo">
+            @foreach (var option in AvailableUsers)
+            {
+                <option value="@option">
+                    @option
+                </option>
+            }
+        </select>
+
         <input type="hidden" @bind="projectObject.ProjectId">       
         <input type="button" class="btn btn-primary" @onclick="@UpdateProject" value="Save"/>
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />     
+
     </form>
 </div>
 
@@ -26,9 +41,14 @@
 
     Project projectObject = new Project();
 
+    List<IdentityUser> AvailableUsers = new List<IdentityUser>();
+
+    string strError = "";
+
     protected override async Task OnInitializedAsync()
     {
         projectObject = await Task.Run(() => projectService.GetProjectAsync(Convert.ToInt32(Id)));
+        
     }
     protected async void UpdateProject()
     {
@@ -38,6 +58,26 @@
     void Cancel()
     {
         NavigationManager.NavigateTo("./Projects");
+    }
+
+     public void GetUsers()
+    {
+        // clear any error messages
+        strError = "";
+        // Collection to hold users
+        AvailableUsers = new List<IdentityUser>();
+        // get users from _UserManager
+        var user = _UserManager.Users.Select(x => new IdentityUser
+        {
+            Id = x.Id,
+            UserName = x.UserName,
+            Email = x.Email,
+            PasswordHash = "*****"
+        });
+        foreach (var item in user)
+        {
+            AvailableUsers.Add(item);
+        }
     }
 
 }

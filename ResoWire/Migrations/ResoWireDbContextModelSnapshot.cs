@@ -245,10 +245,13 @@ namespace ResoWire.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DeletedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DeletedOn")
+                    b.Property<string>("DeletedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsIssueComment")
@@ -257,17 +260,16 @@ namespace ResoWire.Migrations
                     b.Property<bool>("IsProjectComment")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ModifiedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ModifiedOn")
+                    b.Property<string>("ModifiedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
                     b.HasKey("CommentId");
-
-                    b.HasIndex("DeletedById");
-
-                    b.HasIndex("ModifiedById");
 
                     b.ToTable("Comments");
                 });
@@ -292,10 +294,13 @@ namespace ResoWire.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DeletedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DeletedOn")
+                    b.Property<string>("DeletedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -305,29 +310,26 @@ namespace ResoWire.Migrations
                     b.Property<DateTime>("IdentifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("IssueIdentifiedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("IssueName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IssueSummary")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ModifiedOn")
+                    b.Property<string>("ModifiedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("RelatedToProjectId")
                         .HasColumnType("int");
 
                     b.HasKey("IssueId");
-
-                    b.HasIndex("DeletedById");
-
-                    b.HasIndex("IssueIdentifiedById");
-
-                    b.HasIndex("ModifiedById");
 
                     b.ToTable("Issues");
                 });
@@ -349,19 +351,25 @@ namespace ResoWire.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DeletedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DeletedOn")
+                    b.Property<string>("DeletedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmailId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ModifiedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ModifiedOn")
+                    b.Property<string>("ModifiedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("UserClaimId")
@@ -373,11 +381,7 @@ namespace ResoWire.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("DeletedById");
-
                     b.HasIndex("EmailId");
-
-                    b.HasIndex("ModifiedById");
 
                     b.HasIndex("UserClaimId");
 
@@ -409,20 +413,26 @@ namespace ResoWire.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DeletedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DeletedOn")
+                    b.Property<string>("DeletedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ModifiedOn")
+                    b.Property<string>("ModifiedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Projectname")
@@ -436,10 +446,6 @@ namespace ResoWire.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ProjectId");
-
-                    b.HasIndex("DeletedById");
-
-                    b.HasIndex("ModifiedById");
 
                     b.ToTable("Projects");
                 });
@@ -495,55 +501,11 @@ namespace ResoWire.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ResoWire.Data.Comment", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
-                        .WithMany()
-                        .HasForeignKey("DeletedById");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.Navigation("DeletedBy");
-
-                    b.Navigation("ModifiedBy");
-                });
-
-            modelBuilder.Entity("ResoWire.Data.Issue", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
-                        .WithMany()
-                        .HasForeignKey("DeletedById");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IssueIdentifiedBy")
-                        .WithMany()
-                        .HasForeignKey("IssueIdentifiedById");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.Navigation("DeletedBy");
-
-                    b.Navigation("IssueIdentifiedBy");
-
-                    b.Navigation("ModifiedBy");
-                });
-
             modelBuilder.Entity("ResoWire.Data.Person", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
-                        .WithMany()
-                        .HasForeignKey("DeletedById");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Email")
                         .WithMany()
                         .HasForeignKey("EmailId");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", "UserClaim")
                         .WithMany()
@@ -555,30 +517,11 @@ namespace ResoWire.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("DeletedBy");
-
                     b.Navigation("Email");
-
-                    b.Navigation("ModifiedBy");
 
                     b.Navigation("UserClaim");
 
                     b.Navigation("UserName");
-                });
-
-            modelBuilder.Entity("ResoWire.Data.Project", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
-                        .WithMany()
-                        .HasForeignKey("DeletedById");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.Navigation("DeletedBy");
-
-                    b.Navigation("ModifiedBy");
                 });
 #pragma warning restore 612, 618
         }

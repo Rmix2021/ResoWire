@@ -1,9 +1,54 @@
-﻿@page "/AddIssue"
-@using ResoWire.Data
+﻿@page "/AddIssue/{ProjectId}"
+@inject IssueService issueService
 @inject ProjectService projectService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
 
 <h3>AddIssue</h3>
+<AuthorizeView>
+<div>
+    <form method="post" asp-page-handler="Submit">
+        <label>Issue Summary:</label>
+        <input type="text" @bind="issueObject.IssueSummary"><br />
+        <label>Issue description:</label>
+        <input type="text" @bind="issueObject.Description"><br />
+        <label>Issue Identification Date:</label>
+        <input type="datetime-local" @bind="issueObject.IdentifiedOn"><br />       
+        <input type="button" class="btn btn-primary" @onclick="@CreateNewIssue" value="Save"/>
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel"/>    
+    </form>
+</div>
+</AuthorizeView>
 
 @code {
+    [Parameter]
+    public string ProjectId { get; set; }
+
+    Project projectObject = new Project();
+
+    Issue issueObject = new Issue();
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectObject = await Task.Run(() => projectService.GetProjectAsync(Convert.ToInt32(ProjectId)));
+
+    }
+
+    protected async void CreateNewIssue()
+    {
+        var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        var user = authstate.User;
+        issueObject.RelatedToProjectId = Convert.ToInt32(ProjectId);
+        issueObject.CreatedBy = authstate.User.Identity.Name;
+        issueObject.CreatedOn = System.DateTime.Now;
+        issueObject.CreatedById = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
+        await issueService.AddNewIssueAsync(issueObject);
+        NavigationManager.NavigateTo("./Issues/" + ProjectId);
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./Issues/" + ProjectId);
+    }
 
 }

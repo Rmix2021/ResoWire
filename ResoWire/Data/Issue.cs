@@ -5,15 +5,13 @@
         [Key]
         public int IssueId { get; set; }
 
+        public string IssueName { get; set; }   
+
         [Required]
         public string IssueSummary { get; set; }
 
         [Required]
         public string Description { get; set; }
-
-
-        public IdentityUser IssueIdentifiedBy { get; set; }
-
        
         public DateTime IdentifiedOn { get; set; }
 

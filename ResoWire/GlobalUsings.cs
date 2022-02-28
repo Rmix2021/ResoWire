@@ -27,7 +27,6 @@ global using System.Threading.Tasks;
 
 
 
-
 namespace ResoWire
 {
     public class GlobalUsings

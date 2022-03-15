@@ -52,11 +52,11 @@ namespace ResoWire.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    CommentId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CommentText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsProjectComment = table.Column<bool>(type: "bit", nullable: false),
-                    IsIssueComment = table.Column<bool>(type: "bit", nullable: false),
+                    CommentText = table.Column<string>(type: "nvarchar(280)", maxLength: 280, nullable: false),
+                    IssueId = table.Column<int>(type: "int", nullable: true),
+                    CommentId = table.Column<int>(type: "int", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -69,7 +69,12 @@ namespace ResoWire.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.CommentId);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Comments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comments",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -310,6 +315,11 @@ namespace ResoWire.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_CommentId",
+                table: "Comments",
+                column: "CommentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Persons_EmailId",

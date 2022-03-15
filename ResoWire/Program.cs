@@ -26,6 +26,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<IssueService>();
+builder.Services.AddScoped<CommentService>();
 
 //builder.Services.AddSingleton<WeatherForecastService>();
 

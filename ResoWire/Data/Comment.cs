@@ -3,16 +3,22 @@
     public class Comment : AuditTable
     {
         [Key]
-        public int CommentId { get; set; }
+        public int Id { get; set; }
 
         [Required]
+        [MaxLength(280)]
         public string CommentText { get; set; }
 
-        [Required]
-        public bool IsProjectComment { get; set; }
 
-        [Required]
-        public bool IsIssueComment { get; set; }
+        [ForeignKey("IssueId")]
+        public int? IssueId { get; set; }
+
+
+
+        [NotMapped]
+        public virtual Issue Issue { get; set; }
+
+        public virtual List<Comment> Comments { get; set; }
 
 
     }

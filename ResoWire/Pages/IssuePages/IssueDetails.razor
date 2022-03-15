@@ -1,0 +1,185 @@
+﻿@page "/IssueDetails/{IssueId}"
+
+@inject IssueService issueService
+@inject ProjectService projectService
+@inject CommentService commentService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+
+
+<button @onclick="@showCreatedColumns">Show Creation Columns</button>
+<button @onclick="@showModifiedColumns">Show Modified Columns</button>
+
+<h3>IssueDetails</h3>
+
+<div class="table-responsive">
+    <table class="table table-striped project">
+        <thead>
+            <tr>
+                
+                <th>Issue Name</th>
+                <th>Summary</th>
+                <th>Description</th>
+                <AuthorizeView Roles="Administrators">
+                <th hidden="@columnToggle">Created By</th>
+                <th hidden="@columnToggle">Created By Id</th>
+                <th hidden="@columnToggle">Created On</th> 
+                <th hidden="@modifiedColumnToggle">ModifiedBy</th> 
+                <th hidden="@modifiedColumnToggle">ModifiedById</th> 
+                <th hidden="@modifiedColumnToggle">ModifiedOn</th> 
+                </AuthorizeView>
+            </tr>
+        </thead>
+        <tbody>     
+                <tr>                    
+                    <td class="align-middle">
+                        @if (issueObject.IssueName == null)
+                        {
+                            @(projectObject.Projectname + issueObject.IssueId);
+                                
+                        }
+                        else
+                        {
+                            @issueObject.IssueName;
+                        }
+                    </td> 
+                    <td class="align-middle">@issueObject.IssueSummary</td> 
+                    <td class="align-middle">@issueObject.Description</td>
+                    <AuthorizeView Roles="Administrators">
+                    <td class="align-middle" hidden="@columnToggle">@issueObject.CreatedBy</td>
+                    <td class="align-middle" hidden="@columnToggle">@issueObject.CreatedById</td>
+                    <td class="align-middle" hidden="@columnToggle">@issueObject.CreatedOn</td>
+                    <td class="align-middle" hidden="@modifiedColumnToggle">@issueObject.ModifiedBy</td>
+                    <td class="align-middle" hidden="@modifiedColumnToggle">@issueObject.ModifiedById</td>
+                    <td class="align-middle" hidden="@modifiedColumnToggle">@issueObject.ModifiedOn</td>
+                    <td>
+                        <a class="nav-link" href="EditIssue/@issueObject.IssueId"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a>
+                    </td>
+                    <td>
+                        <a class="nav-link" href="DeleteIssue/@issueObject.IssueId"><span class="oi oi-pencil" aria-hidden="true">Delete</span></a>
+                    </td>
+                    </AuthorizeView>                       
+                </tr>         
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <div>
+    @if(comments != null)
+    {
+ 
+    @foreach (var comment in comments)  
+        {  
+            <div class="row" style="width: 100.3%; border-bottom: 1px solid #d2cece; margin-right: -14px; margin-left: -1px;">  
+  
+                <div class="col-md-4" style="width: 36%;">  
+                    <div class="userProfil" style="margin-left: 9px; margin-top: 12px;">  
+                        <a href="#" style="margin-left: 5px; font-weight: bold; font-size: 13px;">@comment.CreatedBy  </a>  
+                    </div>  
+                </div>  
+  
+                <div class="col-md-7" style="width: 32%;">  
+                    <div class="commentDetails">  
+                        <p style="margin-top: 27px; font-size: 13px; color: #9c9898;"> @comment.CommentText </p>  
+                    </div>  
+                </div>  
+  
+                <div class="col-md-1" style="width: 32%;">  
+                    <div class="commentDetails">  
+                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>  
+                        <time class="timeago" style="margin-top: 27px; font-size: 13px; color: #9c9898;  margin-left: 4px;" datetime="@comment.CreatedOn">@comment.CreatedOn</time>  
+  
+                    </div>  
+                </div>  
+  
+            </div>  
+        }  
+    }
+           
+    
+    else{
+        <div>
+            <p>
+                Be the First to Comment on this Issue
+            </p>
+            </div>
+    }
+    </div>
+    <div>
+        <form @onsubmit="@CreateNewComment">
+            <input type="text" @bind="createCommentObject.CommentText" ><br />
+            <input type="button" class="btn btn-primary" @onclick="@CreateNewComment" value="Comment"/>
+       </form>
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string IssueId{ get; set; }  
+
+
+    public Project projectObject = new Project();
+
+    public Issue issueObject = new Issue();
+
+    public Comment createCommentObject = new Comment();
+
+    public bool columnToggle { get; set; } = true;
+
+    public bool modifiedColumnToggle { get; set; } = true;
+
+    private List<Comment> comments { get; set; }
+
+    public bool shouldsubmit { get; set; }
+
+    public bool entersubmit { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        issueObject = await Task.Run(() => issueService.GetIssueAsync(Convert.ToInt32(IssueId)));
+        projectObject = await Task.Run(() => projectService.GetProjectAsync(issueObject.RelatedToProjectId));
+        comments = await Task.Run(() => commentService.GetFilteredCommentsAsync(Convert.ToInt32(IssueId)));
+    }
+
+    private void showCreatedColumns()
+    {
+        if (columnToggle == true)
+        {
+            columnToggle = false;
+        }
+        else
+        {
+            columnToggle = true;
+        }
+    }
+
+    private void showModifiedColumns()
+    {
+        if (modifiedColumnToggle == true)
+        {
+            modifiedColumnToggle = false;
+        }
+        else
+        {
+            modifiedColumnToggle = true;
+        }
+    }
+
+  
+
+    protected async void CreateNewComment()
+    {
+        var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        var user = authstate.User;
+        createCommentObject.IssueId = Convert.ToInt32(IssueId);
+        createCommentObject.CreatedBy = authstate.User.Identity.Name;
+        createCommentObject.CreatedOn = System.DateTime.Now;
+        createCommentObject.CreatedById = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
+        await commentService.AddNewCommentAsync(createCommentObject);
+        StateHasChanged();
+        NavigationManager.NavigateTo("/IssueDetails/"+IssueId , true);
+    }
+}

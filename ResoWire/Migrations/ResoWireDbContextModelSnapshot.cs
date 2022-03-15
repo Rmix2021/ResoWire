@@ -226,15 +226,19 @@ namespace ResoWire.Migrations
 
             modelBuilder.Entity("ResoWire.Data.Comment", b =>
                 {
-                    b.Property<int>("CommentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CommentText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(280)
+                        .HasColumnType("nvarchar(280)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -254,11 +258,8 @@ namespace ResoWire.Migrations
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsIssueComment")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsProjectComment")
-                        .HasColumnType("bit");
+                    b.Property<int?>("IssueId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -269,7 +270,9 @@ namespace ResoWire.Migrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("CommentId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
 
                     b.ToTable("Comments");
                 });
@@ -501,6 +504,13 @@ namespace ResoWire.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ResoWire.Data.Comment", b =>
+                {
+                    b.HasOne("ResoWire.Data.Comment", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("CommentId");
+                });
+
             modelBuilder.Entity("ResoWire.Data.Person", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Email")
@@ -522,6 +532,11 @@ namespace ResoWire.Migrations
                     b.Navigation("UserClaim");
 
                     b.Navigation("UserName");
+                });
+
+            modelBuilder.Entity("ResoWire.Data.Comment", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
